@@ -25,7 +25,7 @@ public class PostViewModel extends ViewModel {
     //this just loads data and stores it in the post var
     void loadPost(final int postId) {
 
-        if (post != null) {
+        if (post == null) {
             PostsApi postsApi = RequestBuilder.init().build().create(PostsApi.class);
             postsApi.getSinglePost(postId).enqueue(new Callback<Post>() {
                 @Override

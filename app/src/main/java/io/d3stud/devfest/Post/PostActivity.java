@@ -35,7 +35,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // this is for showing the data when we get it from the network
-                Log.i(TAG, "onClick: " + viewModel.getPost().toString());
+                if (viewModel.getPost() != null)
+                    Log.i(TAG, "onClick: " + viewModel.getPost().toString());
             }
         });
 
