@@ -1,4 +1,4 @@
-package io.d3stud.devfest;
+package io.d3stud.devfest.Post;
 
 /**
  * Created by thedude61636 on 11/24/17.
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.d3stud.devfest.Consts;
+import io.d3stud.devfest.Data.Model.Post;
 import io.d3stud.devfest.databinding.PostItemBinding;
 
 

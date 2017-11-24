@@ -1,8 +1,9 @@
-package io.d3stud.devfest;
+package io.d3stud.devfest.Post;
 
 import android.arch.lifecycle.GenericLifecycleObserver;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,18 +15,15 @@ import android.view.View;
 
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
-import java.util.List;
-
+import io.d3stud.devfest.R;
 import io.d3stud.devfest.databinding.ActivityMainBinding;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class PostListActivity extends AppCompatActivity {
+    private static final String TAG = "PostListActivity";
     ActivityMainBinding binding;
     PostsAdapter postsAdapter = new PostsAdapter();
     LovelyStandardDialog errorDialog;
+    PostListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +34,15 @@ public class MainActivity extends AppCompatActivity {
         //setting up the recycler and the refresh view
         binding.postRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.postRecycler.setAdapter(postsAdapter);
+
+        //creating the view model
+        viewModel = ViewModelProviders.of(this).get(PostListViewModel.class);
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 postsAdapter.clear();
-                getPosts();
+                //this just logs the data so we can see that it has loaded and it's still persisting
+                Log.i(TAG, "onRefresh: size of posts " + viewModel.getPosts().size());
             }
         });
 
@@ -55,38 +57,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getPosts();
+//        getPosts();
 
     }
 
     //loads posts from the api
-    void getPosts() {
-        binding.refreshLayout.setRefreshing(true);
-        binding.statusImg.setVisibility(View.GONE);
-        PostsApi postsApi =
-                RequestBuilder.init().build().create(PostsApi.class);
 
-        postsApi.getPosts().enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                binding.refreshLayout.setRefreshing(false);
-                if (response.body() != null)
-                    postsAdapter.changeItems(response.body());
-                else {
-                    showErrorDialog(getString(R.string.error));
-                    showStatusImg(getString(R.string.error));
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                binding.refreshLayout.setRefreshing(false);
-                showErrorDialog(t.getLocalizedMessage());
-                showStatusImg(t.getLocalizedMessage());
-            }
-        });
-    }
 
     //show a little image with status text
     private void showStatusImg(String error) {
@@ -124,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            getPosts();
+//                            getPosts();
                         }
                     })
                     .setNegativeButton(R.string.cancel, new View.OnClickListener() {

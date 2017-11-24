@@ -1,7 +1,8 @@
-package io.d3stud.devfest;
+package io.d3stud.devfest.Data;
 
 import java.util.List;
 
+import io.d3stud.devfest.Data.Model.Post;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

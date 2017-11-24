@@ -1,4 +1,4 @@
-package io.d3stud.devfest;
+package io.d3stud.devfest.Data.Model;
 
 
 import com.google.gson.annotations.SerializedName;
@@ -60,5 +60,15 @@ public class Post {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "userId=" + userId +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                '}';
     }
 }

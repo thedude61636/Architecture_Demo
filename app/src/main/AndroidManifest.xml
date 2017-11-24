@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Post.PostListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,13 +21,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PostActivity"
+            android:name=".Post.PostActivity"
             android:label="@string/title_activity_post"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Post.PostListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="io.d3stud.devfest.MainActivity" />
+                android:value="io.d3stud.devfest.Post.PostListActivity" />
         </activity>
     </application>
 

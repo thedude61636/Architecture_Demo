@@ -1,8 +1,9 @@
-package io.d3stud.devfest;
+package io.d3stud.devfest.Data;
 
 
 import java.util.concurrent.TimeUnit;
 
+import io.d3stud.devfest.Consts;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
