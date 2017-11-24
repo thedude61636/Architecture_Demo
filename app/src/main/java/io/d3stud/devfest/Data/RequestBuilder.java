@@ -21,8 +21,8 @@ public class RequestBuilder {
     public static RequestBuilder init() {
         RequestBuilder builder = new RequestBuilder();
         // default values
-        builder.connectTimeout = 500;
-        builder.readTimeout = 500;
+        builder.connectTimeout = 2000;
+        builder.readTimeout = 8000;
         builder.url = Consts.API_URL;
         return builder;
     }

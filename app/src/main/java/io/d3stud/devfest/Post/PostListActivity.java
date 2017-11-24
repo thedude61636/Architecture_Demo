@@ -3,10 +3,12 @@ package io.d3stud.devfest.Post;
 import android.arch.lifecycle.GenericLifecycleObserver;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +17,9 @@ import android.view.View;
 
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
+import java.util.List;
+
+import io.d3stud.devfest.Data.Model.Post;
 import io.d3stud.devfest.R;
 import io.d3stud.devfest.databinding.ActivityMainBinding;
 
@@ -41,8 +46,7 @@ public class PostListActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 postsAdapter.clear();
-                //this just logs the data so we can see that it has loaded and it's still persisting
-                Log.i(TAG, "onRefresh: size of posts " + viewModel.getPosts().size());
+                viewModel.loadPosts();
             }
         });
 
@@ -56,12 +60,38 @@ public class PostListActivity extends AppCompatActivity {
                 Log.d(TAG, "onStateChanged() called with: source = [" + source + "], event = [" + event + "]");
             }
         });
-
-//        getPosts();
-
+        observeViewModelChanges();
     }
 
-    //loads posts from the api
+    private void observeViewModelChanges() {
+        viewModel.getPosts().observe(this, new Observer<List<Post>>() {
+            @Override
+            public void onChanged(@Nullable List<Post> posts) {
+                if (posts != null)
+                    postsAdapter.changeItems(posts);
+            }
+        });
+
+        viewModel.getError().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                if (s != null) {
+                    showErrorDialog(s);
+                    showStatusImg(s);
+                }
+            }
+        });
+        viewModel.getIsLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean != null) {
+                    if (aBoolean)
+                        binding.statusImg.setVisibility(View.GONE);
+                    binding.refreshLayout.setRefreshing(aBoolean);
+                }
+            }
+        });
+    }
 
 
     //show a little image with status text

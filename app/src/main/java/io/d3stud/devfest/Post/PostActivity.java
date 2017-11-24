@@ -1,21 +1,22 @@
 package io.d3stud.devfest.Post;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import io.d3stud.devfest.Consts;
+import io.d3stud.devfest.Data.Model.Post;
 import io.d3stud.devfest.R;
 import io.d3stud.devfest.databinding.ActivityPostBinding;
 
 public class PostActivity extends AppCompatActivity {
     private static final String TAG = "PostActivity";
     ActivityPostBinding binding;
-    int postId;
     private PostViewModel viewModel;
 
     @Override
@@ -35,15 +36,35 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // this is for showing the data when we get it from the network
-                if (viewModel.getPost() != null)
-                    Log.i(TAG, "onClick: " + viewModel.getPost().toString());
+                viewModel.refreshPost();
             }
         });
 
         //getting the value passed by the adapter
-        postId = getIntent().getIntExtra(Consts.POST_ID, -1);
+        int postId = getIntent().getIntExtra(Consts.POST_ID, -1);
         //getting the post when you start the activity
         viewModel.loadPost(postId);
+
+//       observing the changes on the data
+        viewModel.getPost().observe(this, new Observer<Post>() {
+            @Override
+            public void onChanged(@Nullable Post post) {
+                binding.setPost(post);
+            }
+        });
+        viewModel.getIsLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean != null)
+                    binding.progress.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+            }
+        });
+        viewModel.getError().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                showError(s);
+            }
+        });
     }
 
 
