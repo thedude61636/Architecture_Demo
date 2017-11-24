@@ -1,11 +1,13 @@
 package io.d3stud.devfest;
 
+import android.arch.lifecycle.Lifecycle;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
@@ -18,6 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     ActivityMainBinding binding;
     PostsAdapter postsAdapter = new PostsAdapter();
 
@@ -79,34 +82,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showErrorDialog(String error) {
+        Log.d(TAG, "showErrorDialog() called with: error = [" + error + "]");
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            Log.d(TAG, "inside the if");
+            // this crashes on some devices for some reason
+            // and it might crash in the background for some reason
+            // and we can't test this in the emulator
+            // so we'll just pretend that it's crashing
 
-        // this crashes on some devices for some reason
-        // and it might crash in the background for some reason
-        // and we can't test this in the emulator
-        // so we'll just pretend that it's crashing
-//        Post post = null;
-//        post.getBody();
+//            Post post = null;
+//            post.getBody();
 
-        //shows a dialog
-        new LovelyStandardDialog(this)
-                .setButtonsColorRes(R.color.colorAccent)
-                .setTopColorRes(R.color.error)
-                .setTopTitle(R.string.error_title)
-                .setIcon(R.drawable.ic_neutral)
-                .setTopTitleColor(Color.WHITE)
-                .setMessage(error)
-                .setPositiveButton(R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getPosts();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //dialog dismisses itself
-                    }
-                }).show();
+            //shows a dialog
+            LovelyStandardDialog errorDialog = new LovelyStandardDialog(this)
+                    .setButtonsColorRes(R.color.colorAccent)
+                    .setTopColorRes(R.color.error)
+                    .setTopTitle(R.string.error_title)
+                    .setIcon(R.drawable.ic_neutral)
+                    .setTopTitleColor(Color.WHITE)
+                    .setMessage(error)
+                    .setPositiveButton(R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getPosts();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //dialog dismisses itself
+                        }
+                    });
+
+            errorDialog.show();
+        }
     }
 
 }
