@@ -1,6 +1,8 @@
 package io.d3stud.devfest;
 
+import android.arch.lifecycle.GenericLifecycleObserver;
 import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     ActivityMainBinding binding;
     PostsAdapter postsAdapter = new PostsAdapter();
+    LovelyStandardDialog errorDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //getting the posts
+        //this monitors the lifecycle changes
+        getLifecycle().addObserver(new GenericLifecycleObserver() {
+            @Override
+            public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
+                if (event.equals(Lifecycle.Event.ON_PAUSE)) {
+                    dismissDialog();
+                }
+                Log.d(TAG, "onStateChanged() called with: source = [" + source + "], event = [" + event + "]");
+            }
+        });
+
         getPosts();
 
     }
@@ -81,6 +94,13 @@ public class MainActivity extends AppCompatActivity {
         binding.statusImg.setVisibility(View.GONE);
     }
 
+    //this dismisses the dialog before rotating
+    private void dismissDialog() {
+        Log.d(TAG, "dismissDialog() called");
+        if (errorDialog != null && errorDialog.isShowing())
+            errorDialog.dismiss();
+    }
+
     private void showErrorDialog(String error) {
         Log.d(TAG, "showErrorDialog() called with: error = [" + error + "]");
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
@@ -94,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 //            post.getBody();
 
             //shows a dialog
-            LovelyStandardDialog errorDialog = new LovelyStandardDialog(this)
+            errorDialog = new LovelyStandardDialog(this)
                     .setButtonsColorRes(R.color.colorAccent)
                     .setTopColorRes(R.color.error)
                     .setTopTitle(R.string.error_title)
