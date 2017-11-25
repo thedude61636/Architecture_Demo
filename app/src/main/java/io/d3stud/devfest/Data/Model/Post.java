@@ -1,13 +1,15 @@
 package io.d3stud.devfest.Data.Model;
 
 
+import android.arch.persistence.room.Entity;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by thedude61636 on 11/24/17.
  */
-
-// a simple data class
+//the annotation here is for room
+@Entity(primaryKeys = {"id"}, tableName = "posts")
 public class Post {
 
 

@@ -46,7 +46,7 @@ public class PostListActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 postsAdapter.clear();
-                viewModel.loadPosts();
+                viewModel.refresh();
             }
         });
 

@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.d3stud.devfest.Data.Model.Post;
@@ -42,7 +43,10 @@ public class PostListViewModel extends AndroidViewModel {
             public void postsLoaded(List<Post> posts) {
                 isLoading.setValue(false);
                 postsLiveData.setValue(posts);
-
+//                for (Post post : posts) {
+//
+//                    postsRepo.inserPosts(post);
+//                }
             }
 
             @Override
@@ -52,6 +56,14 @@ public class PostListViewModel extends AndroidViewModel {
             }
         });
 
+    }
+
+    //this clears the database and loads new posts
+    void refresh() {
+
+//        postsRepo.clearPosts();
+        postsLiveData.setValue(new ArrayList<Post>());
+        loadPosts();
     }
 
     //this returns a non mutable live data object that we will subscribe to
