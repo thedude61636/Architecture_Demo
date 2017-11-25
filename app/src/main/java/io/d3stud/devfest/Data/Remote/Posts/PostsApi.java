@@ -1,4 +1,4 @@
-package io.d3stud.devfest.Data;
+package io.d3stud.devfest.Data.Remote.Posts;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import io.d3stud.devfest.Data.Model.Post;
-import io.d3stud.devfest.Data.PostsApi;
+import io.d3stud.devfest.Data.Remote.Posts.PostsApi;
 import io.d3stud.devfest.Data.RequestBuilder;
 import io.d3stud.devfest.R;
 import retrofit2.Call;
